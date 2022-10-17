@@ -1,12 +1,13 @@
 package com.MortgateCalc;
 
+import javax.swing.plaf.synth.SynthOptionPaneUI;
 import java.text.NumberFormat;
 import java.util.Scanner;
-import java.util.logging.SocketHandler;
+
 
 public class Main {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+
         final float PRINCIPAL_MAX = 1_000_000F;
         final float PRINCIPAL_MIN = 1_000F;
 
@@ -16,43 +17,37 @@ public class Main {
         final byte PERIOD_IN_YEARS_MAX = 30;
         final byte PERIOD_IN_YEARS_MIN = 1;
 
-        float principal;
-        float annualRate;
-        byte periodInYears;
-
-        while (true) {
-
-            System.out.print("Principal ($1K - $1M):");
-            principal = scanner.nextFloat();
-            if (principal >= PRINCIPAL_MIN && principal <= PRINCIPAL_MAX )
-                break;
-            System.out.println("Enter a number between 1,000 and 1,000,000.");
-        }
-
-        while (true) {
-            System.out.print("Annual Interest Rate: ");
-            annualRate = scanner.nextFloat();
-            if (annualRate > ANNUAL_RATE_MIN && annualRate <= ANNUAL_RATE_MAX)
-                break;
-            System.out.println("Enter a value greater than 0 and less or equal to 30.");
-        }
-
-        while (true) {
-            System.out.print("Period (Years): ");
-            periodInYears = scanner.nextByte();
-
-            if (periodInYears >= PERIOD_IN_YEARS_MIN && periodInYears <= PERIOD_IN_YEARS_MAX)
-                break;
-            System.out.println("Enter a value between 1 and 30");
-        }
+        float principal = (float) readNumber("Principal ($1K - $1M): ", PRINCIPAL_MIN, PRINCIPAL_MAX);
+        float annualRate = (float) readNumber("Annual Interest Rate: ", ANNUAL_RATE_MIN, ANNUAL_RATE_MAX);
+        short periodInYears = (short) readNumber("Period (Years): ", PERIOD_IN_YEARS_MIN, PERIOD_IN_YEARS_MAX);
 
 
 
-        double mortgage = MortgageCalculator.calculateMortgage(principal,annualRate, periodInYears);
+        double mortgage = MortgageCalculator.calculateMortgagePayment(principal,annualRate, periodInYears);
+
         String formattedMortgage = NumberFormat.getCurrencyInstance().format(mortgage);
 
-        System.out.println(formattedMortgage);
+        System.out.println("MORTGAGE:");
+        System.out.println("___________");
+        System.out.println("Monthly Payments: " + formattedMortgage);
+
+        MortgageCalculator.printPaymentSchedule(principal, annualRate, periodInYears);
 
 
     }
+
+    public static double readNumber(String prompt, double min, double max) {
+        Scanner scanner = new Scanner(System.in);
+        double input;
+        while (true) {
+            System.out.print(prompt);
+            input = scanner.nextDouble();
+            if (input >= min && input <= max) {
+                break;
+            }
+            System.out.println("Enter a value between " + min + " and " + max + ".");
+        }
+        return input;
+    }
+
 }
