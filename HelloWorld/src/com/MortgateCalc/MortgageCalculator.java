@@ -35,6 +35,12 @@ public class MortgageCalculator {
         return remainingBalance;
     }
 
+    public static void printMortgagePayment(double mortgage) {
+        String formattedMortgage = NumberFormat.getCurrencyInstance().format(mortgage);
+        System.out.println("MORTGAGE:");
+        System.out.println("___________");
+        System.out.println("Monthly Payments: " + formattedMortgage);
+    }
     public static void printPaymentSchedule(double principal,
                                             float annualRate,
                                             short periodInYears) {

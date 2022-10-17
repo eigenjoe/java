@@ -1,9 +1,6 @@
 package com.MortgateCalc;
 
-import javax.swing.plaf.synth.SynthOptionPaneUI;
-import java.text.NumberFormat;
 import java.util.Scanner;
-
 
 public class Main {
     public static void main(String[] args) {
@@ -21,19 +18,9 @@ public class Main {
         float annualRate = (float) readNumber("Annual Interest Rate: ", ANNUAL_RATE_MIN, ANNUAL_RATE_MAX);
         short periodInYears = (short) readNumber("Period (Years): ", PERIOD_IN_YEARS_MIN, PERIOD_IN_YEARS_MAX);
 
-
-
         double mortgage = MortgageCalculator.calculateMortgagePayment(principal,annualRate, periodInYears);
-
-        String formattedMortgage = NumberFormat.getCurrencyInstance().format(mortgage);
-
-        System.out.println("MORTGAGE:");
-        System.out.println("___________");
-        System.out.println("Monthly Payments: " + formattedMortgage);
-
+        MortgageCalculator.printMortgagePayment(mortgage);
         MortgageCalculator.printPaymentSchedule(principal, annualRate, periodInYears);
-
-
     }
 
     public static double readNumber(String prompt, double min, double max) {
