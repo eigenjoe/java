@@ -1,60 +1,62 @@
 package com.MortgateCalc;
 
-import java.text.NumberFormat;
-
 public class MortgageCalculator {
 
-    static final byte MONTHS_IN_YEAR = 12;
-    static final byte PERCENT = 100;
+    private float principal;
+    private float annualRate;
 
-    public static double calculateMortgagePayment( double principal, double annualRate, int periodInYears) {
+    private byte periodInYears;
 
+    public byte getMONTHS_IN_YEAR() {
+        return MONTHS_IN_YEAR;
+    }
+    public byte getPeriodInYears() {
+        return periodInYears;
+    }
+    private final byte MONTHS_IN_YEAR = 12;
+    private final byte PERCENT = 100;
 
-        double monthlyRate = annualRate / PERCENT / MONTHS_IN_YEAR;
-        short periodInMonths = (short)(periodInYears * MONTHS_IN_YEAR);
+    public MortgageCalculator(float principal, float annualRate, byte periodInYears) {
+        this.principal = principal;
+        this.annualRate = annualRate;
+        this.periodInYears = periodInYears;
+    }
 
-        double result = principal * ( (monthlyRate * Math.pow((1 + monthlyRate), periodInMonths)) /
-                ((Math.pow((1 + monthlyRate), periodInMonths)) - 1));
+    public double calculateMortgagePayment() {
+        float monthlyRate = annualRate / PERCENT / MONTHS_IN_YEAR;
+        short periodInMonths = getPeriodInMonths();
+
+        float result = (float) (principal *
+                        ( (monthlyRate * Math.pow((1 + monthlyRate), periodInMonths)) /
+                        ((Math.pow((1 + monthlyRate), periodInMonths)) - 1)));
 
         return result;
     };
 
-    public static double calculateRemainingBalance(
-            double principal,
-            float annualRate,
-            byte periodInYears,
-            short numberOfPaymentsMade) {
+    public float calculateRemainingBalance( short numberOfPaymentsMade ) {
 
-        double monthlyRate = annualRate / PERCENT / MONTHS_IN_YEAR;
-        short periodInMonths = (short)(periodInYears * MONTHS_IN_YEAR);
+        float monthlyRate = annualRate / PERCENT / MONTHS_IN_YEAR;
+        short periodInMonths = getPeriodInMonths();
 
-        double remainingBalance = principal *
-                ( Math.pow((1 + monthlyRate), periodInMonths) - Math.pow((1 + monthlyRate), numberOfPaymentsMade) ) /
-                (Math.pow((1 + monthlyRate), periodInMonths) - 1);
+        float remainingBalance = (float) (principal *
+                        ( Math.pow((1 + monthlyRate), periodInMonths) - Math.pow((1 + monthlyRate), numberOfPaymentsMade) ) /
+                        (Math.pow((1 + monthlyRate), periodInMonths) - 1));
 
         return remainingBalance;
     }
 
-    public static void printMortgagePayment(double mortgage) {
-        String formattedMortgage = NumberFormat.getCurrencyInstance().format(mortgage);
-        System.out.println("MORTGAGE:");
-        System.out.println("___________");
-        System.out.println("Monthly Payments: " + formattedMortgage);
+    private short getPeriodInMonths() {
+        return (short) (periodInYears * MONTHS_IN_YEAR);
     }
-    public static void printPaymentSchedule(double principal,
-                                            float annualRate,
-                                            short periodInYears) {
 
-        short periodInMonths = (short)(periodInYears * MONTHS_IN_YEAR);
+    public float[] calculateRemainingPayments() {
 
-        System.out.println("PAYMENT SCHEDULE");
-        System.out.println("_________________");
-        for (short i = 1; i <= periodInMonths; i++)  {
-
-            double remainingBalance = calculateRemainingBalance(principal, annualRate, (byte) periodInYears, i);
-
-            String formattedBalance = NumberFormat.getCurrencyInstance().format(remainingBalance);
-            System.out.println(formattedBalance);
+        float[] remainingPayments = new float[getPeriodInMonths()];
+        for (short month = 1; month < remainingPayments.length; month++) {
+            float balance = calculateRemainingBalance(month);
+            remainingPayments[month - 1] = balance;
         }
+
+        return remainingPayments;
     }
 }

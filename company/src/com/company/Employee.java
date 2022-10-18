@@ -4,9 +4,9 @@ public class Employee {
     private float baseSalary;
     private float hourlyRate;
 
-    public void Employee(double baseSalary, double hourlyRate):{
-        this.baseSalary = baseSalary;
-        this.hourlyRate = hourlyRate;
+    public Employee(float baseSalary, float hourlyRate)  {
+        setBaseSalary(baseSalary);
+        setHourlyRate(hourlyRate);
     }
 
     public float getBaseSalary() {
@@ -33,5 +33,8 @@ public class Employee {
 
     public float calculateWage(int extraHours) {
         return baseSalary + ( hourlyRate * extraHours);
+    }
+    public float calculateWage() {
+        return calculateWage(0);
     }
 }

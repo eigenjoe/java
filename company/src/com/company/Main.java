@@ -5,5 +5,8 @@ public class Main {
 
         var joe = new Employee(150000, 126);
 
+        double wage = joe.calculateWage(10);
+
+        System.out.println(wage);
     }
 }
